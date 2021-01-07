@@ -1,45 +1,62 @@
 (function() {
   'use strict';
 
-  angular.module('LunchCheck', [])
-  .controller('LunchCheckController', LunchCheckController);
+  var shoppingList = [
+    {name: "cookies", quantity: 10}, {name: "cokies2", quantity: 11}, {name: "cookies3", quantity: 12}
+  ];
 
-  LunchCheckController.$inject = ['$scope'];
-  function LunchCheckController($scope) {
-    $scope.userInput = "";
-    $scope.countItems = 0;
-    $scope.message = "Please enter data first";
 
-    $scope.keyUp = function() {
-      var totalItems = countItems($scope.userInput);
-      $scope.countItems = totalItems;
+
+
+  angular.module('ShoppingListCheckOff', [])
+  .controller('ToBuyController', ToBuyController);
+  .controller('AlreadyBoughtController', AlreadyBoughtController);
+  .service('ShoppingListCheckOffService', ShoppingListCheckOffService);
+
+  ShoppingListCheckOffService.$inject['ShoppingListCheckOffService'];
+  function ToBuyController(ShoppingListCheckOffService) {
+    var itemAdder = this;
+      itemAdder.itemName = "";
+      itemAdder.itemQuantity = "";
+
+      itemAdder.addItem = function() {
+      ShoppingListCheckOffService.addItem(itemAdder.itemName, itemAdder.itemQuantity);
     };
-
-    $scope.setMessage = function() {
-      $scope.message = setMessage($scope.countItems);
-    }
   };
 
-  function countItems(string) {
-    var itemsArray = string.split(',');
-    var tmpCount = 0;
-    for (var i=0; i<itemsArray.length; i++) {
-      if (itemsArray[i].trim().length>0) {
-        tmpCount++;
-      }
-    }
-    return tmpCount;
-  }
+  ShoppingListCheckOffService.$inject['ShoppingListCheckOffService'];
+  function AlreadyBoughtController(ShoppingListCheckOffService {
+    var showList = this;
+    showList.items = ShoppingListCheckOffService.getItems();
+  };
 
-  function setMessage(countItems) {
-    var tmpMessage = "Please enter data first";
-    if (countItems > 0 & countItems <= 3) {
-      tmpMessage = "Enjoy!";
+  function ShoppingListCheckOffService() {
+    var service = this;
+    var items = [];
+
+    service.addItem = function(itemName, quantity) {
+      var item = {
+        name = itemName,
+        quantity = quantity
+      };
+      items.push(item);
     };
-    if (countItems > 3) {
-      tmpMessage = "Too much!";
+
+    service.getItems = function() {
+      return items;
     };
-    return tmpMessage;
-  }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
 
 }) ();
